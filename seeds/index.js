@@ -19,16 +19,21 @@ db.once('open', () => {
 
 const sample = (array) => array[Math.floor(Math.random() * array.length)];
 
+const descriptionText =
+  'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptatem libero, expedita sapiente quo incidunt ad qui? Sint fuga quia asperiores';
+
 const seedDB = async () => {
   await Campground.deleteMany({});
 
   for (let i = 0; i < 50; i++) {
     const random1000 = Math.floor(Math.random() * 1000);
+    const price = Math.floor(Math.random() * 15) + 15;
     const camp = new Campground({
       location: `${cities[random1000].city}, ${cities[random1000].state}`,
       title: `${sample(descriptors)} ${sample(places)}`,
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Possimus sed repudiandae beatae adipisci totam excepturi quibusdam ratione odit quod nemo!',
+      image: 'https://source.unsplash.com/collection/483251',
+      description: descriptionText,
+      price,
     });
     await camp.save();
   }

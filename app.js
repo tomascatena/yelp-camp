@@ -1,20 +1,37 @@
 const path = require('path');
+const dotenv = require('dotenv');
 
 const express = require('express');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
+const connectDB = require('./config/db');
+const ejsMate = require('ejs-mate');
+const Campground = require('./models/campground');
+
+const morgan = require('morgan');
+const color = require('colors');
+
+// Load env vars
+dotenv.config({ path: './config/config.env' });
 
 const app = express();
 
-const Campground = require('./models/campground');
+// Connect to DB
+connectDB();
 
-require('./database/db');
-
+app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
+
+// Dev loggin middleware
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
 
 app.get('/', (req, res, next) => {
   res.render('home');
@@ -61,5 +78,5 @@ app.delete('/campgrounds/:id', async (req, res, next) => {
 
 const port = process.env.PORT || 3000;
 app.listen(port, (req, res, next) => {
-  console.log(`Server running on port ${port}`);
+  console.log(`Server running on port ${port}`.black.bgYellow.bold);
 });
