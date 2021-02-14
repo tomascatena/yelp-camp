@@ -1,8 +1,13 @@
 <%- layout('/layouts/boilerplate') -%>
 <div class="row">
   <h1 class="text-center">Edit Campground <%= campground.title %></h1>
-  <div class="col-6 offset-3">
-    <form action="/campgrounds/<%= campground._id %>?_method=PUT" method="POST">
+  <div class="col-md-6 offset-md-3">
+    <form
+      action="/campgrounds/<%= campground._id %>?_method=PUT"
+      method="POST"
+      novalidate
+      class="validated-form"
+    >
       <div class="mb-3">
         <label class="form-label" for="title">Title</label>
         <input
@@ -11,7 +16,9 @@
           id="title"
           name="campground[title]"
           value="<%= campground.title %>"
+          required
         />
+        <div class="valid-feedback">Looks good!</div>
       </div>
       <div class="mb-3">
         <label class="form-label" for="location">Location</label>
@@ -21,7 +28,9 @@
           id="location"
           name="campground[location]"
           value="<%= campground.location %>"
+          required
         />
+        <div class="valid-feedback">Looks good!</div>
       </div>
       <div class="mb-3">
         <label class="form-label" for="price">Price</label>
@@ -34,8 +43,10 @@
             name="campground[price]"
             aria-label="Amount (to the nearest dollar)"
             value="<%= campground.price %>"
+            required
           />
           <span class="input-group-text">.00</span>
+          <div class="valid-feedback">Looks good!</div>
         </div>
       </div>
       <div class="mb-3">
@@ -46,9 +57,11 @@
           type="text"
           id="description"
           name="campground[description]"
+          required
         >
-<%= campground.description %>
-        </textarea>
+<%=campground.description%></textarea
+        >
+        <div class="valid-feedback">Looks good!</div>
       </div>
       <div class="mb-3">
         <label class="form-label" for="image">Image URL</label>
@@ -58,11 +71,13 @@
           id="image"
           name="campground[image]"
           value="<%= campground.image %>"
+          required
         />
+        <div class="valid-feedback">Looks good!</div>
       </div>
 
       <div class="row">
-        <div class="col-md-6 text-left">
+        <div class="col-md-6 mb-3 mb-md-0">
           <a
             class="btn btn-secondary"
             href="/campgrounds/<%= campground._id  %> "
@@ -70,7 +85,7 @@
             <i class="fas fa-chevron-left"></i> Back To Campground</a
           >
         </div>
-        <div class="col-md-6 text-right">
+        <div class="col-md-6">
           <button class="btn btn-primary">Update Campground</button>
         </div>
       </div>
