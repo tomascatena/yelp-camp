@@ -1,12 +1,16 @@
 <%- layout('/layouts/boilerplate') -%>
 <div class="row">
-  <div class="col-md-6">
+  <div class="col-md-7">
     <h1 class="text-center">Campground <%= campground.title %></h1>
-    <hr />
+    <img
+      class="img-fluid"
+      src="<%= campground.image  %> "
+      alt="<%= campground.title %>"
+      style="max-height: 400px"
+    />
     <h3>Location: <%= campground.location %></h3>
     <p>Price: $<%= campground.price %>/night</p>
     <p>Description: <%= campground.description %></p>
-    <hr />
     <div class="my-4 text-center">
       <a
         class="btn btn-primary me-4"
@@ -22,11 +26,55 @@
       </form>
     </div>
   </div>
-  <div class="col-md-6">
-    <img
-      class="img-fluid"
-      src="<%= campground.image  %> "
-      alt="<%= campground.title %>"
-    />
+  <div class="col-md-5">
+    <h2>Leave A Review</h2>
+    <form
+      action="/campgrounds/<%= campground._id %>/reviews"
+      method="POST"
+      novalidate
+      class="validated-form mb-3"
+    >
+      <div class="mb-3">
+        <label for="rating" class="form-label">Rating</label>
+        <input
+          type="range"
+          name="review[rating]"
+          id="rating"
+          class="form-range"
+          step="1"
+          min="1"
+          max="5"
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="body">Review</label>
+        <textarea
+          class="form-control"
+          name="review[body]"
+          id="body"
+          cols="30"
+          rows="4"
+          required
+        ></textarea>
+        <div class="valid-feedback">Looks good!</div>
+      </div>
+      <button class="btn btn-success">Submit Reivew</button>
+    </form>
+    <% for(let review of campground.reviews) { %>
+    <div class="mb-3">
+      <div class="card mb-2">
+        <div class="card-body p-1">
+          <p class="card-title">Rating: <%= review.rating %></p>
+          <p class="card-text">Comment: <%= review.body %></p>
+          <form
+            action="/campgrounds/<%= campground._id %>/reviews/<%= review._id %>?_method=DELETE"
+            method="POST"
+          >
+            <button class="btn btn-sm btn-danger">Delete Review</button>
+          </form>
+        </div>
+      </div>
+      <% } %>
+    </div>
   </div>
 </div>
