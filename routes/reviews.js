@@ -6,39 +6,31 @@ const dotenv = require('dotenv');
 dotenv.config({ path: './config/config.env' });
 const morgan = require('morgan');
 
+// Middlewares
+const { validateReview, isLoggedIn, isReviewAuthor } = require('../middleware');
+
 // Custom error handling
 const catchAsync = require('../utils/catchAsync');
-const ExpressError = require('../utils/ExpressError');
 
 // Import mongoose models
 const Review = require('../models/review');
 const Campground = require('../models/campground');
 
 // Joi schema for data validation
-const { reviewSchema } = require('../schemas');
 
 // Dev loggin middleware
 if (process.env.NODE_ENV === 'development') {
   router.use(morgan('dev'));
 }
 
-// Middleware to validate the req.body with Joi
-const validateReview = (req, res, next) => {
-  const { error } = reviewSchema.validate(req.body);
-  if (error) {
-    const msg = error.details.map((el) => el.message).join(',');
-    throw new ExpressError(msg, 400);
-  } else {
-    next();
-  }
-};
-
 router.post(
   '/',
+  isLoggedIn,
   validateReview,
   catchAsync(async (req, res, next) => {
     const campground = await Campground.findById(req.params.id);
     const review = new Review(req.body.review);
+    review.author = req.user._id;
     campground.reviews.push(review);
     await review.save();
     await campground.save();
@@ -49,6 +41,8 @@ router.post(
 
 router.delete(
   '/:reviewId',
+  isLoggedIn,
+  isReviewAuthor,
   catchAsync(async (req, res, next) => {
     const { id, reviewId } = req.params;
     await Campground.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });

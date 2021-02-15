@@ -9,9 +9,12 @@
       style="max-height: 400px"
     />
     <h3>Location: <%= campground.location %></h3>
+    <p>Submitted by: <%= campground.author.username %></p>
     <p>Price: $<%= campground.price %>/night</p>
     <p>Description: <%= campground.description %></p>
-    <div class="my-4 text-center">
+
+    <% if(currentUser && campground.author.equals(currentUser._id)) { %>
+    <div class="my-4">
       <a
         class="btn btn-primary me-4"
         href="/campgrounds/<%= campground._id %>/edit"
@@ -25,8 +28,10 @@
         <button class="btn btn-danger">Delete Campground</button>
       </form>
     </div>
+    <% } %>
   </div>
   <div class="col-md-5">
+    <% if(currentUser){ %>
     <h2>Leave A Review</h2>
     <form
       action="/campgrounds/<%= campground._id %>/reviews"
@@ -60,18 +65,21 @@
       </div>
       <button class="btn btn-success">Submit Reivew</button>
     </form>
-    <% for(let review of campground.reviews) { %>
+    <% } %> <% for(let review of campground.reviews) { %>
     <div class="mb-3">
       <div class="card mb-2">
         <div class="card-body p-1">
-          <p class="card-title">Rating: <%= review.rating %></p>
+          <h5 class="card-title">Rating: <%= review.rating %></h5>
+          <h6 class="card-subtitle">by <%= review.author.username %></h6>
           <p class="card-text">Comment: <%= review.body %></p>
+          <% if(currentUser && review.author._id.equals(currentUser._id)) { %>
           <form
             action="/campgrounds/<%= campground._id %>/reviews/<%= review._id %>?_method=DELETE"
             method="POST"
           >
             <button class="btn btn-sm btn-danger">Delete Review</button>
           </form>
+          <% } %>
         </div>
       </div>
       <% } %>

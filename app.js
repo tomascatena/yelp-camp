@@ -10,6 +10,7 @@ const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate');
 const passport = require('passport');
 const localStrategy = require('passport-local');
+const EspressError = require('./utils/ExpressError');
 
 // Models
 const User = require('./models/user');
@@ -65,7 +66,6 @@ app.use(methodOverride('_method'));
 // For every single request, take what is under 'success'
 // and have access to it in the locals under the key 'success'
 app.use((req, res, next) => {
-  console.log(req.session);
   res.locals.currentUser = req.user;
   res.locals.success = req.flash('success');
   res.locals.error = req.flash('error');
