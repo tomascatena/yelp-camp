@@ -1,9 +1,12 @@
+// Load env vars
+if (process.env.NODE_ENV !== 'production') {
+  const dotenv = require('dotenv');
+  dotenv.config({ path: './config/config.env' });
+}
+
 const path = require('path');
-
 const connectDB = require('./config/db');
-
 const express = require('express');
-const dotenv = require('dotenv');
 const session = require('express-session');
 const flash = require('connect-flash');
 const methodOverride = require('method-override');
@@ -23,9 +26,6 @@ const usersRoutes = require('./routes/users');
 // Dev tools
 const morgan = require('morgan');
 const colors = require('colors');
-
-// Load env vars
-dotenv.config({ path: './config/config.env' });
 
 const app = express();
 

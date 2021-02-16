@@ -1,14 +1,40 @@
 <%- layout('/layouts/boilerplate') -%>
 <link rel="stylesheet" href="/css/starability-basic.css" />
+
 <div class="row">
   <div class="col-md-7">
     <h1 class="text-center">Campground <%= campground.title %></h1>
-    <img
-      class="img-fluid"
-      src="<%= campground.image  %> "
-      alt="<%= campground.title %>"
-      style="max-height: 400px"
-    />
+    <!-- Bootstrap Carousel -->
+    <div id="campgroundCarousel" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <% campground.images.forEach((img,index) => { %>
+        <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+          <img class="d-block w-100" src="<%= img.url %>" alt="" />
+        </div>
+        <% }) %>
+      </div>
+      <% if(campground.images.length > 1) { %>
+      <button
+        class="carousel-control-prev"
+        type="button"
+        data-bs-target="#campgroundCarousel"
+        data-bs-slide="prev"
+      >
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button
+        class="carousel-control-next"
+        type="button"
+        data-bs-target="#campgroundCarousel"
+        data-bs-slide="next"
+      >
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+      <% } %>
+    </div>
+    <!-- End Bootstrap Carousel -->
     <h3>Location: <%= campground.location %></h3>
     <p>Submitted by: <%= campground.author.username %></p>
     <p>Price: $<%= campground.price %>/night</p>

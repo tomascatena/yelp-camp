@@ -1,12 +1,13 @@
 <%- layout('/layouts/boilerplate') -%>
 <div class="row">
   <h1 class="text-center">Edit Campground <%= campground.title %></h1>
-  <div class="col-md-6 offset-md-3">
+  <div class="col-md-8 offset-md-2">
     <form
       action="/campgrounds/<%= campground._id %>?_method=PUT"
       method="POST"
       novalidate
       class="validated-form"
+      enctype="multipart/form-data"
     >
       <div class="mb-3">
         <label class="form-label" for="title">Title</label>
@@ -63,20 +64,40 @@
         >
         <div class="valid-feedback">Looks good!</div>
       </div>
-      <div class="mb-3">
-        <label class="form-label" for="image">Image URL</label>
-        <input
-          class="form-control"
-          type="text"
-          id="image"
-          name="campground[image]"
-          value="<%= campground.image %>"
-          required
-        />
-        <div class="valid-feedback">Looks good!</div>
+      <div class="">
+        <label class="form-label" for="description">Add more images</label>
+        <div class="input-group mb-3">
+          <input
+            type="file"
+            class="form-control"
+            id="images"
+            name="images"
+            multiple
+          />
+          <label class="input-group-text" for="images" name="images"
+            >Upload</label
+          >
+        </div>
       </div>
-
-      <div class="row">
+      <div class="mb-3">
+        <% campground.images.forEach((img,i)=>{ %>
+        <div class="d-inline-block m-2">
+          <div class="d-block">
+            <label for="image-<%= i %>">Delete?</label>
+            <div class="form-check-inline">
+              <input
+                type="checkbox"
+                id="image-<%= i %>"
+                name="deleteImages[]"
+                value="<%= img.filename %>"
+              />
+            </div>
+          </div>
+          <img src="<%= img.thumbnail %>" alt="" class="img-thumbnail" />
+        </div>
+        <% }) %>
+      </div>
+      <div class="row mt-5">
         <div class="col-md-6 mb-3 mb-md-0">
           <a
             class="btn btn-secondary"
@@ -85,7 +106,7 @@
             <i class="fas fa-chevron-left"></i> Back To Campground</a
           >
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6 text-right">
           <button class="btn btn-primary">Update Campground</button>
         </div>
       </div>

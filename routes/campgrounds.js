@@ -1,5 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+const { storage } = require('../cloudinary/index');
+const upload = multer({ storage });
 
 // Load env vars
 const dotenv = require('dotenv');
@@ -25,6 +28,7 @@ router
   .get(catchAsync(campgroundsControllers.index))
   .post(
     isLoggedIn,
+    upload.array('images'),
     validateCampground,
     catchAsync(campgroundsControllers.createCampground)
   );
@@ -38,6 +42,7 @@ router
   .put(
     isLoggedIn,
     isAuthor,
+    upload.array('images'),
     validateCampground,
     catchAsync(campgroundsControllers.updateCampground)
   )
