@@ -1,5 +1,15 @@
+// Load env vars
+if (process.env.NODE_ENV !== 'production') {
+  const dotenv = require('dotenv');
+  dotenv.config({ path: './config/config.env' });
+}
+
+// Mapbox geocoding
+const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
+const mapBoxToken = process.env.MAPBOX_TOKEN;
+const geocoder = mbxGeocoding({ accessToken: mapBoxToken });
+
 const mongoose = require('mongoose');
-const campground = require('../models/campground');
 const Campground = require('../models/campground');
 
 const cities = require('./cities');
@@ -28,12 +38,23 @@ const seedDB = async () => {
   for (let i = 0; i < 50; i++) {
     const random1000 = Math.floor(Math.random() * 1000);
     const price = Math.floor(Math.random() * 15) + 15;
+    const location = `${cities[random1000].city}, ${cities[random1000].state}`;
+
+    const geoData = await geocoder
+      .forwardGeocode({
+        query: location,
+        limit: 1,
+      })
+      .send();
+    geometry = geoData.body.features[0].geometry;
+
     const camp = new Campground({
       author: '602a8cc8d6e54b01d8019d88',
-      location: `${cities[random1000].city}, ${cities[random1000].state}`,
+      location,
       title: `${sample(descriptors)} ${sample(places)}`,
       description: descriptionText,
       price,
+      geometry,
       images: [
         {
           url:

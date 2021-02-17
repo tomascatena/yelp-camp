@@ -1,11 +1,27 @@
 <%- layout('/layouts/boilerplate') -%>
 <link rel="stylesheet" href="/css/starability-basic.css" />
 
+<script type="text/javascript">
+  const mapboxToken = '<%- process.env.MAPBOX_TOKEN %>';
+  const campground = <%- JSON.stringify(campground) %>;
+</script>
+
 <div class="row">
   <div class="col-md-7">
     <h1 class="text-center">Campground <%= campground.title %></h1>
+    <% if(!campground.images.length) { %>
+    <img
+      src="/images/placeholder_view_vector.svg"
+      alt=""
+      class="img-fluid mb-3"
+    />
+    <% } %>
     <!-- Bootstrap Carousel -->
-    <div id="campgroundCarousel" class="carousel slide" data-bs-ride="carousel">
+    <div
+      id="campgroundCarousel"
+      class="carousel slide mb-3"
+      data-bs-ride="carousel"
+    >
       <div class="carousel-inner">
         <% campground.images.forEach((img,index) => { %>
         <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
@@ -58,6 +74,8 @@
     <% } %>
   </div>
   <div class="col-md-5">
+    <!-- Mapbox map -->
+    <div id="map" class="mb-3"></div>
     <% if(currentUser){ %>
     <h2>Leave A Review</h2>
     <form
@@ -152,3 +170,6 @@
     </div>
   </div>
 </div>
+<!-- Mapbox -->
+<script src="https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.js"></script>
+<script src="/js/showPageMap.js" type="text/javascript"></script>
