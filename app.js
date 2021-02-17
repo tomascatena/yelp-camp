@@ -178,5 +178,9 @@ app.use((err, req, res, next) => {
 
 const port = process.env.PORT || 3000;
 app.listen(port, (req, res, next) => {
-  console.log(`Server running on port ${port}`.black.bgYellow.bold);
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`Server running on port ${port}`.black.bgYellow.bold);
+  } else {
+    console.log(`Server running on port ${port}`);
+  }
 });
