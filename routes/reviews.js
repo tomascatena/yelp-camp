@@ -4,8 +4,11 @@ const router = express.Router({ mergeParams: true });
 // Load env vars
 const dotenv = require('dotenv');
 dotenv.config({ path: './config/config.env' });
-const morgan = require('morgan');
 
+if (process.env.NODE_ENV === 'development') {
+  const morgan = require('morgan');
+  const colors = require('colors');
+}
 // Middlewares
 const { validateReview, isLoggedIn, isReviewAuthor } = require('../middleware');
 

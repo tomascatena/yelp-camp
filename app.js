@@ -27,8 +27,10 @@ const reviewsRoutes = require('./routes/reviews');
 const usersRoutes = require('./routes/users');
 
 // Dev tools
-const morgan = require('morgan');
-const colors = require('colors');
+if (process.env.NODE_ENV === 'development') {
+  const morgan = require('morgan');
+  const colors = require('colors');
+}
 
 const app = express();
 

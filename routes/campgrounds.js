@@ -13,7 +13,10 @@ const upload = multer({
 // Load env vars
 const dotenv = require('dotenv');
 dotenv.config({ path: './config/config.env' });
-const morgan = require('morgan');
+if (process.env.NODE_ENV === 'development') {
+  const morgan = require('morgan');
+  const colors = require('colors');
+}
 
 // Custom error handling
 const catchAsync = require('../utils/catchAsync');
