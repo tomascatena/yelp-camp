@@ -3,6 +3,7 @@ if (process.env.NODE_ENV !== 'production') {
   const dotenv = require('dotenv');
   dotenv.config({ path: './config/config.env' });
 }
+const colors = require('colors');
 
 // Mapbox geocoding
 // const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
@@ -16,17 +17,20 @@ const Campground = require('../models/campground');
 const cities = require('./cities-de');
 const { places, descriptors } = require('./seedHelpers');
 
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useCreateIndex: true,
-  useUnifiedTopology: true,
-});
+const connectDB = async () => {
+  const conn = await mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
+    useUnifiedTopology: true,
+  });
 
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', () => {
-  console.log('Database connected');
-});
+  console.log(
+    `MongoDB Connected for seeder: ${conn.connection.host}:${conn.connection.port}/${conn.connection.name}`
+      .red.bold.underline
+  );
+};
+connectDB();
 
 const sample = (array) => array[Math.floor(Math.random() * array.length)];
 
@@ -36,7 +40,7 @@ const descriptionText =
 const seedDB = async () => {
   await Campground.deleteMany({});
 
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < 200; i++) {
     const randomIndex = Math.floor(Math.random() * cities.length);
     const price = Math.floor(Math.random() * 15) + 15;
     const location = `${cities[randomIndex].city}, ${cities[randomIndex].state}`;
