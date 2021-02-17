@@ -2,7 +2,13 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const { storage } = require('../cloudinary/index');
-const upload = multer({ storage });
+
+const upload = multer({
+  storage,
+  limits: {
+    fileSize: 2 * 1024 * 1024,
+  },
+});
 
 // Load env vars
 const dotenv = require('dotenv');
@@ -28,7 +34,7 @@ router
   .get(catchAsync(campgroundsControllers.index))
   .post(
     isLoggedIn,
-    upload.array('images'),
+    upload.array('images', 4),
     validateCampground,
     catchAsync(campgroundsControllers.createCampground)
   );
@@ -42,7 +48,7 @@ router
   .put(
     isLoggedIn,
     isAuthor,
-    upload.array('images'),
+    upload.array('images', 4),
     validateCampground,
     catchAsync(campgroundsControllers.updateCampground)
   )

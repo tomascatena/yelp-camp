@@ -1,8 +1,8 @@
 // Load env vars
-// if (process.env.NODE_ENV !== 'production') {
-//   const dotenv = require('dotenv');
-//   dotenv.config({ path: './config/config.env' });
-// }
+if (process.env.NODE_ENV !== 'production') {
+  const dotenv = require('dotenv');
+  dotenv.config({ path: './config/config.env' });
+}
 
 // Mapbox geocoding
 // const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
@@ -16,7 +16,7 @@ const Campground = require('../models/campground');
 const cities = require('./cities-de');
 const { places, descriptors } = require('./seedHelpers');
 
-mongoose.connect('mongodb://localhost:27017/yelp-camp', {
+mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useUnifiedTopology: true,
@@ -36,7 +36,7 @@ const descriptionText =
 const seedDB = async () => {
   await Campground.deleteMany({});
 
-  for (let i = 0; i < 300; i++) {
+  for (let i = 0; i < 20; i++) {
     const randomIndex = Math.floor(Math.random() * cities.length);
     const price = Math.floor(Math.random() * 15) + 15;
     const location = `${cities[randomIndex].city}, ${cities[randomIndex].state}`;
@@ -50,7 +50,7 @@ const seedDB = async () => {
     // geometry = geoData.body.features[0].geometry;
 
     const camp = new Campground({
-      author: '602a8cc8d6e54b01d8019d88',
+      author: '602d4f9d2e8dff4ea8d594c5',
       location,
       title: `${sample(descriptors)} ${sample(places)}`,
       description: descriptionText,

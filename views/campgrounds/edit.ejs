@@ -65,7 +65,9 @@
         <div class="valid-feedback">Looks good!</div>
       </div>
       <div class="">
-        <label class="form-label" for="description">Add more images</label>
+        <label class="form-label" for="description"
+          >Add more images (Max. file size 2MB)</label
+        >
         <div class="input-group mb-3">
           <input
             type="file"
@@ -73,6 +75,7 @@
             id="images"
             name="images"
             multiple
+            accept="image/png, image/jpeg, image/jpg"
           />
           <label class="input-group-text" for="images" name="images"
             >Upload</label

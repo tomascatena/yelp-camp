@@ -16,6 +16,7 @@ const localStrategy = require('passport-local');
 const EspressError = require('./utils/ExpressError');
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
+const MongoDBStore = require('connect-mongo')(session);
 
 // Models
 const User = require('./models/user');
@@ -87,33 +88,31 @@ app.use(
     replaceWith: '_',
   })
 );
-let sessionConfig;
-if (process.env.NODE_ENV !== 'production') {
-  sessionConfig = {
-    name: 'session',
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-      httpOnly: true,
-      expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
-      maxAge: 1000 * 60 * 60 * 24 * 7,
-    },
-  };
-} else {
-  sessionConfig = {
-    name: 'session',
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-      secure: true,
-      httpOnly: true,
-      expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
-      maxAge: 1000 * 60 * 60 * 24 * 7,
-    },
-  };
-}
+
+const store = new MongoDBStore({
+  url: process.env.MONGO_URI,
+  secret: process.env.SESSION_SECRET,
+  touchAfter: 24 * 3600,
+});
+
+store.on('error', function (e) {
+  console.log('Session Store Error', e);
+});
+
+const sessionConfig = {
+  store,
+  name: 'session',
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    // secure: true,
+    httpOnly: true,
+    expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+    maxAge: 1000 * 60 * 60 * 24 * 7,
+  },
+};
+
 app.use(session(sessionConfig));
 app.use(flash());
 
