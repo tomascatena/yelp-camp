@@ -1,13 +1,13 @@
 // Load env vars
-if (process.env.NODE_ENV !== 'production') {
-  const dotenv = require('dotenv');
-  dotenv.config({ path: './config/config.env' });
-}
+// if (process.env.NODE_ENV !== 'production') {
+//   const dotenv = require('dotenv');
+//   dotenv.config({ path: './config/config.env' });
+// }
 
 // Mapbox geocoding
-const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
-const mapBoxToken = process.env.MAPBOX_TOKEN;
-const geocoder = mbxGeocoding({ accessToken: mapBoxToken });
+// const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
+// const mapBoxToken = process.env.MAPBOX_TOKEN;
+// const geocoder = mbxGeocoding({ accessToken: mapBoxToken });
 
 const mongoose = require('mongoose');
 const Campground = require('../models/campground');
@@ -35,18 +35,18 @@ const descriptionText =
 const seedDB = async () => {
   await Campground.deleteMany({});
 
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i < 300; i++) {
     const random1000 = Math.floor(Math.random() * 1000);
     const price = Math.floor(Math.random() * 15) + 15;
     const location = `${cities[random1000].city}, ${cities[random1000].state}`;
 
-    const geoData = await geocoder
-      .forwardGeocode({
-        query: location,
-        limit: 1,
-      })
-      .send();
-    geometry = geoData.body.features[0].geometry;
+    // const geoData = await geocoder
+    //   .forwardGeocode({
+    //     query: location,
+    //     limit: 1,
+    //   })
+    //   .send();
+    // geometry = geoData.body.features[0].geometry;
 
     const camp = new Campground({
       author: '602a8cc8d6e54b01d8019d88',
@@ -54,7 +54,13 @@ const seedDB = async () => {
       title: `${sample(descriptors)} ${sample(places)}`,
       description: descriptionText,
       price,
-      geometry,
+      geometry: {
+        type: 'Point',
+        coordinates: [
+          cities[random1000].longitude,
+          cities[random1000].latitude,
+        ],
+      },
       images: [
         {
           url:
