@@ -5,7 +5,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 const path = require('path');
-const connectDB = require('./config/db');
+// const connectDB = require('./config/db');
 const express = require('express');
 const session = require('express-session');
 const flash = require('connect-flash');
@@ -16,7 +16,8 @@ const localStrategy = require('passport-local');
 const EspressError = require('./utils/ExpressError');
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
-const MongoDBStore = require('connect-mongo')(session);
+// const MongoDBStore = require('connect-mongo')(session);
+const mongoose = require('mongoose');
 
 // Models
 const User = require('./models/user');
@@ -83,7 +84,19 @@ app.use(
 );
 
 // Connect to DB
-connectDB();
+// connectDB();
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false,
+});
+
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', () => {
+  console.log('Database connected');
+});
 
 app.use(
   mongoSanitize({
@@ -91,25 +104,25 @@ app.use(
   })
 );
 
-const store = new MongoDBStore({
-  url: process.env.MONGO_URI,
-  secret: process.env.SESSION_SECRET,
-  touchAfter: 24 * 3600,
-});
+// const store = new MongoDBStore({
+//   url: process.env.MONGO_URI,
+//   secret: process.env.SESSION_SECRET,
+//   touchAfter: 24 * 3600,
+// });
 
-store.on('error', function (e) {
-  console.log('Session Store Error', e);
-});
+// store.on('error', function (e) {
+//   console.log('Session Store Error', e);
+// });
 
 const sessionConfig = {
-  store,
+  // store,
   name: 'session',
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
   cookie: {
-    secure: true,
     httpOnly: true,
+    // secure: true,
     expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
     maxAge: 1000 * 60 * 60 * 24 * 7,
   },
