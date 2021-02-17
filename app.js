@@ -150,9 +150,9 @@ app.use('/campgrounds/:id/reviews', reviewsRoutes);
 app.use('/users', usersRoutes);
 
 // Dev loggin middleware
-if (process.env.NODE_ENV === 'development') {
-  app.use(morgan('dev'));
-}
+// if (process.env.NODE_ENV === 'development') {
+//   app.use(morgan('dev'));
+// }
 
 // Root URL
 app.get('/', (req, res, next) => {

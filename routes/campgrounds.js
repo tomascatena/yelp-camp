@@ -11,11 +11,12 @@ const upload = multer({
 });
 
 // Load env vars
-const dotenv = require('dotenv');
-dotenv.config({ path: './config/config.env' });
 if (process.env.NODE_ENV === 'development') {
+  const dotenv = require('dotenv');
+  dotenv.config({ path: './config/config.env' });
   const morgan = require('morgan');
   const colors = require('colors');
+  router.use(morgan('dev'));
 }
 
 // Custom error handling
@@ -26,11 +27,6 @@ const campgroundsControllers = require('../controllers/campgrounds');
 
 // Middlewares
 const { isLoggedIn, validateCampground, isAuthor } = require('../middleware');
-
-// Dev loggin middleware
-if (process.env.NODE_ENV === 'development') {
-  router.use(morgan('dev'));
-}
 
 router
   .route('/')

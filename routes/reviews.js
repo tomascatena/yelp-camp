@@ -8,6 +8,7 @@ dotenv.config({ path: './config/config.env' });
 if (process.env.NODE_ENV === 'development') {
   const morgan = require('morgan');
   const colors = require('colors');
+  router.use(morgan('dev'));
 }
 // Middlewares
 const { validateReview, isLoggedIn, isReviewAuthor } = require('../middleware');
@@ -19,11 +20,6 @@ const catchAsync = require('../utils/catchAsync');
 const reviewControllers = require('../controllers/reviews');
 
 // Joi schema for data validation
-
-// Dev loggin middleware
-if (process.env.NODE_ENV === 'development') {
-  router.use(morgan('dev'));
-}
 
 router.post(
   '/',
