@@ -13,7 +13,7 @@
     <img
       src="/images/placeholder_view_vector.svg"
       alt=""
-      class="img-fluid mb-3"
+      class="img-fluid mb-3 camp-image-show"
     />
     <% } %>
     <!-- Bootstrap Carousel -->
@@ -25,7 +25,7 @@
       <div class="carousel-inner">
         <% campground.images.forEach((img,index) => { %>
         <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
-          <img class="d-block w-100" src="<%= img.url %>" alt="" />
+          <img class="d-block camp-image-show" src="<%= img.url %>" alt="" />
         </div>
         <% }) %>
       </div>
@@ -76,7 +76,6 @@
   <div class="col-md-5">
     <!-- Mapbox map -->
     <div id="map" class="mb-3"></div>
-    <% if(currentUser){ %>
     <h2>Leave A Review</h2>
     <form
       action="/campgrounds/<%= campground._id %>/reviews"
@@ -145,9 +144,13 @@
         ></textarea>
         <div class="valid-feedback">Looks good!</div>
       </div>
+      <% if(currentUser){ %>
       <button class="btn btn-success">Submit Reivew</button>
+      <% } else { %>
+      <button class="btn btn-success" disabled>Submit Reivew</button>
+      <% } %>
     </form>
-    <% } %> <% for(let review of campground.reviews) { %>
+    <% for(let review of campground.reviews) { %>
     <div class="mb-3">
       <div class="card mb-2">
         <div class="card-body p-1">
