@@ -12,7 +12,8 @@
 const mongoose = require('mongoose');
 const Campground = require('../models/campground');
 
-const cities = require('./cities');
+// const cities = require('./cities');
+const cities = require('./cities-de');
 const { places, descriptors } = require('./seedHelpers');
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
@@ -36,9 +37,9 @@ const seedDB = async () => {
   await Campground.deleteMany({});
 
   for (let i = 0; i < 300; i++) {
-    const random1000 = Math.floor(Math.random() * 1000);
+    const randomIndex = Math.floor(Math.random() * cities.length);
     const price = Math.floor(Math.random() * 15) + 15;
-    const location = `${cities[random1000].city}, ${cities[random1000].state}`;
+    const location = `${cities[randomIndex].city}, ${cities[randomIndex].state}`;
 
     // const geoData = await geocoder
     //   .forwardGeocode({
@@ -57,8 +58,8 @@ const seedDB = async () => {
       geometry: {
         type: 'Point',
         coordinates: [
-          cities[random1000].longitude,
-          cities[random1000].latitude,
+          cities[randomIndex].longitude,
+          cities[randomIndex].latitude,
         ],
       },
       images: [

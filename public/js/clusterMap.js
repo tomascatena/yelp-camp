@@ -2,8 +2,8 @@ mapboxgl.accessToken = mapboxToken;
 const map = new mapboxgl.Map({
   container: 'map',
   style: 'mapbox://styles/mapbox/outdoors-v10',
-  center: [-103.59179687498357, 40.66995747013945],
-  zoom: 3,
+  center: [10.4515, 51.1657],
+  zoom: 4.5,
 });
 
 map.addControl(new mapboxgl.NavigationControl());
@@ -21,7 +21,7 @@ map.on('load', function () {
     data: campgroundsData,
     cluster: true,
     clusterMaxZoom: 14, // Max zoom to cluster points on
-    clusterRadius: 50, // Radius of each cluster when clustering points (defaults to 50)
+    clusterRadius: 25, // Radius of each cluster when clustering points (defaults to 50)
   });
 
   map.addLayer({
@@ -39,9 +39,9 @@ map.on('load', function () {
         'step',
         ['get', 'point_count'],
         '#51bbd6',
-        5,
+        8,
         '#f1f075',
-        15,
+        25,
         '#f28cb1',
       ],
       'circle-radius': ['step', ['get', 'point_count'], 12, 5, 18, 15, 25],
