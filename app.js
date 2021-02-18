@@ -16,7 +16,7 @@ const localStrategy = require('passport-local');
 const EspressError = require('./utils/ExpressError');
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
-// const MongoDBStore = require('connect-mongo')(session);
+const MongoStore = require('connect-mongo')(session);
 const mongoose = require('mongoose');
 
 // Models
@@ -91,7 +91,7 @@ mongoose.connect(process.env.MONGO_URI, {
   useUnifiedTopology: true,
   useFindAndModify: false,
 });
-
+mongoose.Promise = global.Promise;
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => {
@@ -116,6 +116,7 @@ app.use(
 
 const sessionConfig = {
   // store,
+  store: new MongoStore({ mongooseConnection: db }),
   name: 'session',
   secret: process.env.SESSION_SECRET,
   resave: false,
